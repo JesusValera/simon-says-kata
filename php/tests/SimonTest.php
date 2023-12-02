@@ -39,4 +39,19 @@ final class SimonTest extends TestCase
 
         self::assertSame($colors, [Color::COLOR_RED, Color::COLOR_RED, Color::COLOR_RED]);
     }
+
+    public function test_player_loses(): void
+    {
+        $simon = new Simon();
+
+        $colorGenerator = new MockColorGenerator();
+        $simon->generateColor($colorGenerator);
+        $colors = $simon->generateColor($colorGenerator);
+        self::assertCount(2, $colors);
+
+        $endGame = $simon->play([Color::COLOR_GREEN, Color::COLOR_GREEN]);
+        $colors = $simon->generateColor($colorGenerator);
+        self::assertCount(1, $colors);
+        self::assertTrue($endGame);
+    }
 }

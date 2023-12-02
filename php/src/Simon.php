@@ -21,9 +21,19 @@ final class Simon
         return $this->colors;
     }
 
-    public function play(): bool
+    /**
+     * @param list<Color> $colors
+     */
+    public function play(array $colors): bool
     {
-        return true;
+        foreach ($colors as $k => $color) {
+            if ($color->value !== $this->colors[$k]->value) {
+                $this->colors = [];
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 
