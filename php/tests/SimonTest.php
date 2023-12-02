@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace KataTests;
 
+use Kata\Color;
+use Kata\MockColorGenerator;
 use Kata\Simon;
 use PHPUnit\Framework\TestCase;
 
@@ -16,12 +18,13 @@ final class SimonTest extends TestCase
      * The game runs until the player loses
      */
 
-    public function test_assert_true(): void
+    public function test_return_red(): void
     {
         $simon = new Simon();
 
-        $result = $simon->play();
+        $colorGenerator = new MockColorGenerator();
+        $colors = $simon->generateColor($colorGenerator);
 
-        self::assertEquals(true, $result);
+        self::assertSame($colors, [Color::COLOR_RED]);
     }
 }
