@@ -6,6 +6,9 @@ namespace Kata;
 
 final class Simon
 {
+    /**
+     * @var list<Color>
+     */
     private array $colors = [];
 
     /**

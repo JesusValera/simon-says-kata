@@ -27,4 +27,16 @@ final class SimonTest extends TestCase
 
         self::assertSame($colors, [Color::COLOR_RED]);
     }
+
+    public function test_return_red_multiple_times(): void
+    {
+        $simon = new Simon();
+
+        $colorGenerator = new MockColorGenerator();
+        $simon->generateColor($colorGenerator);
+        $simon->generateColor($colorGenerator);
+        $colors = $simon->generateColor($colorGenerator);
+
+        self::assertSame($colors, [Color::COLOR_RED, Color::COLOR_RED, Color::COLOR_RED]);
+    }
 }
