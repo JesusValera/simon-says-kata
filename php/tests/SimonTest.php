@@ -17,41 +17,38 @@ final class SimonTest extends TestCase
      * If the player selects an incorrect color, then the game is over
      * The game runs until the player loses
      */
-
-    public function test_return_red(): void
+    public function test_simon(): void
     {
-        $simon = new Simon();
+        $mockColorGenerator = new MockColorGenerator([Color::COLOR_RED]);
+        $simon = new Simon($mockColorGenerator);
 
-        $colorGenerator = new MockColorGenerator();
-        $colors = $simon->generateColor($colorGenerator);
+        $simon->playRound();
 
-        self::assertSame($colors, [Color::COLOR_RED]);
+        $userColors = [Color::COLOR_RED];
+        self::assertTrue($simon->userInteract($userColors));
     }
 
-    public function test_return_red_multiple_times(): void
+    public function test_simon_2(): void
     {
-        $simon = new Simon();
+        $mockColorGenerator = new MockColorGenerator([Color::COLOR_RED, Color::COLOR_BLUE]);
+        $simon = new Simon($mockColorGenerator);
 
-        $colorGenerator = new MockColorGenerator();
-        $simon->generateColor($colorGenerator);
-        $simon->generateColor($colorGenerator);
-        $colors = $simon->generateColor($colorGenerator);
+        $simon->playRound();
+        $userColors = [Color::COLOR_RED];
+        self::assertTrue($simon->userInteract($userColors));
 
-        self::assertSame($colors, [Color::COLOR_RED, Color::COLOR_RED, Color::COLOR_RED]);
+        $userColors = [Color::COLOR_RED, Color::COLOR_BLUE];
+        $simon->playRound();
+        self::assertTrue($simon->userInteract($userColors));
     }
 
-    public function test_player_loses(): void
+    public function test_simon_player_loses(): void
     {
-        $simon = new Simon();
+        $mockColorGenerator = new MockColorGenerator([Color::COLOR_RED]);
+        $simon = new Simon($mockColorGenerator);
 
-        $colorGenerator = new MockColorGenerator();
-        $simon->generateColor($colorGenerator);
-        $colors = $simon->generateColor($colorGenerator);
-        self::assertCount(2, $colors);
-
-        $endGame = $simon->play([Color::COLOR_GREEN, Color::COLOR_GREEN]);
-        $colors = $simon->generateColor($colorGenerator);
-        self::assertCount(1, $colors);
-        self::assertTrue($endGame);
+        $userColors = [Color::COLOR_BLUE];
+        $simon->playRound();
+        self::assertFalse($simon->userInteract($userColors));
     }
 }

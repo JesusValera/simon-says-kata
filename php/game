@@ -1,0 +1,61 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Kata\Color;
+use Kata\RandomColorGenerator;
+use Kata\Simon;
+
+echo "Welcome to the game!\n";
+echo "Simon will show you a sequence of colors, repeat the sequence by entering the colors separated by a space.\n";
+echo "The colors are: Red [R], Blue [B], Yellow [Y] and Green [G].\n";
+echo "\n";
+
+$colorGenerator = new RandomColorGenerator();
+$simon = new Simon($colorGenerator);
+
+while (true) {
+    $colors = $simon->playRound();
+
+    echo "Simon says: ";
+    foreach ($colors as $color) {
+        echo $color->value . " ";
+    }
+    echo "\n";
+
+    echo "Your turn: ";
+    $userColors = [];
+    $userInput = readline();
+    foreach (explode(" ", $userInput) as $c) {
+        $userColor = match ($c) {
+            'R', 'r' => Color::COLOR_RED,
+            'B', 'b' => Color::COLOR_BLUE,
+            'Y', 'y' => Color::COLOR_YELLOW,
+            'G', 'g' => Color::COLOR_GREEN,
+            default => invalidColor(),
+        };
+
+        if ($userColor instanceof Color) {
+            $userColors[] = $userColor;
+        }
+    }
+
+    $continue = $simon->userInteract($userColors);
+
+    if ($continue) {
+        echo "Good job!\n\n";
+    } else {
+        echo "Game over!\n";
+        break;
+    }
+}
+
+function invalidColor(): null
+{
+    echo "Invalid color\n";
+
+    return null;
+}
